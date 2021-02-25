@@ -115,26 +115,28 @@ int main(int argc, char *argv[]) {
 
 					case 'm':
 						
-							//caso -m10
+						//caso -m10
 						opzione = &argv[i][j];
 						
 						if(argv[i][j+1]){
 							
 							if((number = isNumber(&argv[i][j+1])) == -1){
 								printf("La stringa %s non è un parametro per l'opzione %c\n", &argv[i][j+1],*opzione);
-								
-								fine = 1;
+								printf("sto in m");
 								return -1;
 							}
-							printf("-%c: %ld\n",*opzione, number);
+							printf("-m: %ld\n", number);
+							fine = 1;
 							
 							opzione = NULL;
+							break;
 
 							
 						}else{
-							//caso -m 10
+							//caso -n 10
 							if(argv[i+1]){
 								if(argv[i+1][0] != '-'){
+									
 
 									if((number = isNumber(argv[i+1])) != -1){
 										printf("-%c: %ld\n",*opzione,number);
@@ -163,13 +165,14 @@ int main(int argc, char *argv[]) {
 
 						break;
 
+
 					case 's':
 						opzione = &argv[i][j];
 						
 						//caso -s"ciao"
 						if(argv[i][j+1]){
 							
-							string = &argv[i+1][j];
+							string = &argv[i][j+1];
 							printf("-%c: %s\n", *opzione,string);
 							fine = 1;
 							
