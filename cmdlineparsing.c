@@ -23,6 +23,7 @@ int main(int argc, char *argv[]) {
 	char* string=NULL;
 	int issNumber=0;
 	int isString=0;
+	char *opzione=NULL;
 
 	int i=0;
 	while(++i<argc){
@@ -33,7 +34,7 @@ int main(int argc, char *argv[]) {
 				if(issNumber==2){
 
 					if((number = isNumber(argv[i])) == -1){
-						printf("La stringa %s non è un parametro per l'opzione -n", argv[i]);
+						printf("La stringa %s non è un parametro per l'opzione %s\n", argv[i],opzione);
 						return -1;
 					}
 					printf("-n: %ld\n", number);
@@ -44,6 +45,7 @@ int main(int argc, char *argv[]) {
 			case '-': 
 			issNumber = 0;
 			number = -1;
+			opzione == NULL;
 			while(*++argv[i]){
 
 				switch(*argv[i]){
@@ -51,15 +53,18 @@ int main(int argc, char *argv[]) {
 					
 					case 'n':
 						//caso -n10
+						opzione = argv[i];
 						++argv[i];
 						if(*argv[i]){
 							
 							if((number = isNumber(argv[i])) == -1){
-								printf("La stringa %s non è un parametro per l'opzione -n", argv[i]);
+								printf("La stringa %s non è un parametro per l'opzione -%s\n", --argv[i]);
 								return -1;
 							}
 							printf("-n: %ld\n", number);
 							issNumber=1;//Devo avvisare lo switch interno che ho letto un numero
+							opzione = NULL;
+
 							break;
 						}else{
 							//caso -n 10
@@ -68,6 +73,24 @@ int main(int argc, char *argv[]) {
 						}
 
 					case 'm':
+						//caso -m10
+						opzione = argv[i];
+						++argv[i];
+						if(*argv[i]){
+							
+							if((number = isNumber(argv[i])) == -1){
+								printf("La stringa %s non è un parametro per l'opzione -%s\n", --argv[i],opzione);
+								return -1;
+							}
+							printf("-m: %ld\n", number);
+							issNumber=1;//Devo avvisare lo switch interno che ho letto un numero
+							opzione = NULL;
+							break;
+						}else{
+							//caso -n 10
+							issNumber = 2;//Devo avvisare entrambi gli switch che la prossima stringa è un numero
+							break;
+						}
 					case 's':
 					case 'h':
 					default:
@@ -79,7 +102,8 @@ int main(int argc, char *argv[]) {
 							break;
 						}
 
-						printf("Errore: %s non è un opzione corretta", argv[i]);
+						printf("Errore: %s non è un parametro coretto\n", --argv[i]);
+						return -1;
 
 				}
 
