@@ -42,10 +42,29 @@ int main(int argc, char *argv[]) {
 					break;
 
 				}
+
+				if(isString==2){
+
+					if((number = isNumber(argv[i])) != -1){
+						printf("La stringa %s non è un parametro per l'opzione %s\n", argv[i],opzione);
+						return -1;
+					}
+					printf("-s: %s\n", argv[i]);
+					isString=0;	
+					break;
+
+				}
+
+				printf("Errore: %s non è un parametro coretto\n", argv[i]);
+				return -1;
+
+
 			case '-': 
 			issNumber = 0;
+			isString=0;
+			string = NULL;
 			number = -1;
-			opzione == NULL;
+			opzione = NULL;
 			while(*++argv[i]){
 
 				switch(*argv[i]){
@@ -58,7 +77,7 @@ int main(int argc, char *argv[]) {
 						if(*argv[i]){
 							
 							if((number = isNumber(argv[i])) == -1){
-								printf("La stringa %s non è un parametro per l'opzione -%s\n", --argv[i]);
+								printf("La stringa %s non è un parametro per l'opzione -%s\n", --argv[i],opzione);
 								return -1;
 							}
 							printf("-n: %ld\n", number);
@@ -73,9 +92,10 @@ int main(int argc, char *argv[]) {
 						}
 
 					case 'm':
-						//caso -m10
+						
 						opzione = argv[i];
 						++argv[i];
+						//caso -m10
 						if(*argv[i]){
 							
 							if((number = isNumber(argv[i])) == -1){
@@ -92,6 +112,22 @@ int main(int argc, char *argv[]) {
 							break;
 						}
 					case 's':
+						opzione = argv[i];
+						++argv[i];
+						//caso -s"ciao"
+						if(*argv[i]){
+							
+							string = argv[i];
+							printf("-s: %s\n", string);
+							isString=1;//Devo avvisare lo switch interno che ho letto una stringa
+							opzione = NULL;
+							break;
+						}else{
+							//caso -s "ciao"
+							isString= 2;//Devo avvisare entrambi gli switch che la prossima stringa è una stringa
+							break;
+						}
+
 					case 'h':
 					default:
 						if(issNumber==1){
@@ -99,6 +135,14 @@ int main(int argc, char *argv[]) {
 							break;
 
 						}else if(issNumber == 2){
+							break;
+						}
+
+						if(isString==1){
+
+							break;
+
+						}else if(isString == 2){
 							break;
 						}
 
