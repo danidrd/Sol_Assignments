@@ -25,9 +25,9 @@ int main(int argc, char *argv[]) {
 	int isString=0;
 
 	int i=0;
-	while(++argv[i][0]){
+	while(++i<argc){
 
-		switch(*argv[i]){
+		switch(argv[i][0]){
 
 			default: 
 				if(issNumber==2){
@@ -51,7 +51,8 @@ int main(int argc, char *argv[]) {
 					
 					case 'n':
 						//caso -n10
-						if(*++argv[i]){
+						++argv[i];
+						if(*argv[i]){
 							
 							if((number = isNumber(argv[i])) == -1){
 								printf("La stringa %s non è un parametro per l'opzione -n", argv[i]);
