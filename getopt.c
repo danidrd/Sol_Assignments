@@ -2,7 +2,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <unistd.h>
-#include <unistd.h>
+
 
 
 
@@ -33,7 +33,7 @@ int main(int argc, char *argv[]) {
 	}
 
 	while((opt = getopt(argc,argv,"n:m:o:h")) != -1){
-
+		
 		switch(opt){
 
 			case '?': {
@@ -42,7 +42,7 @@ int main(int argc, char *argv[]) {
 			} break;
 
 			default: {
-
+				
 				printf("parametro -%c = %s\n", opt, optarg);
 				break;
 
