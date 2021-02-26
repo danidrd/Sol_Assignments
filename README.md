@@ -6,6 +6,6 @@ Assignments 2:
 getopt.c
 ptrtofunction.c
 reentrantfunc.c
-randomnumbers.c 
+random.c 
 
 
