@@ -3,9 +3,9 @@
 #include <time.h>
 
 
-#define N 1000
-#define K1 100
-#define K2 120
+#define N 10
+#define K1 50
+#define K2 60
 
 
 int main(int argc, char* argv[]) {
@@ -38,19 +38,20 @@ int main(int argc, char* argv[]) {
    		
 
 	}else{
-		printf("usage: N K1 K2");
-		n = N;
-		k1 = K1;
-		k2 = K2;
+		printf("usage: N K1 K2\n");
+		//Errore di segmentazione, gestire meglio caso senza paramteri!
+		n =(int) N;
+		k1 = (int) K1;
+		k2 = (int) K2;
 	}
 
-
-	unsigned int seedp=time(NULL);
+	if(argc>1){
+		unsigned int seedp=time(NULL);
 	
 		//comandi inseriti
 		float percentuali[k2-k1];
 	
-		float contatore[k2-k1];
+		long contatore[k2-k1];
 
 		int i;
 
@@ -62,22 +63,68 @@ int main(int argc, char* argv[]) {
 		}
 		for(i=0;i<n;i++){
 
-			int result = rand_r(&seedp)%k2;
-			
+			int result =  rand_r(&seedp)%(k2-k1+1);	
+
 			contatore[result]++;
+			
+			
+			
 
 		}
+		
 		
 
 		for(i=0;i<k2-k1;i++){
 			
-			percentuali[i]=(float) (contatore[i] * 100/n)*n;
-			float perc = percentuali[i]/n;
+			percentuali[i]=(float) (contatore[i] * 100)/n;
+			float perc = percentuali[i];
 
 			printf("%ld   : %f %%\n",i+k1, perc);
 
 		}
 
+	}else{
+
+		unsigned int seedp=time(NULL);
+	
+		//comandi inseriti
+		float percentuali[K2-K1];
+	
+		long contatore[K2-K1];
+
+		int i;
+
+		for(i=0;i<K2-K1;i++){
+
+			contatore[i]=0;
+			
+
+		}
+		for(i=0;i<N;i++){
+
+			int result =  rand_r(&seedp)%(K2-K1+1);	
+
+			contatore[result]++;
+			
+			
+			
+
+		}
+		
+		
+
+		for(i=0;i<K2-K1;i++){
+			
+			percentuali[i]=(float) (contatore[i] * 100)/N;
+			float perc = percentuali[i];
+
+			printf("%d  : %f %%\n",i+K1, perc);
+
+		}
+
+
+	}
+	
 
 		return 0;
 
