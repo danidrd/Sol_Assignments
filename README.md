@@ -15,5 +15,5 @@ Assignments 3:
 libtokenizer.a
 libtokenizer.so
 macro.c
-somma.c
+sommada.c
 prog.c
