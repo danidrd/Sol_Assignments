@@ -12,8 +12,8 @@ random.c
 
 Assignments 3:
 
-libtokenizer.a
-libtokenizer.so
+tok(librerie statiche e dinamiche)
+
 macro.c
 sommada.c
 prog.c
