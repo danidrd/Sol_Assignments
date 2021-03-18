@@ -4,7 +4,7 @@
 
 int main(int argc,char *argv[]){
 
-
+	//Dimensione del file di input
 	int sz;
 
 	FILE *ifp, *opf;
@@ -14,9 +14,11 @@ int main(int argc,char *argv[]){
 		strerror(errno);
 		return -1;
 	}
+	//Trovo la dimensione del file
 	fseek(ifp,0L,SEEK_END);
 	sz = ftell(ifp);
 	char s[sz + 2];
+	//Necessario per rileggere il file dopo la fseek
 	rewind(ifp);
 
  	opf = fopen(argv[1],"w");
@@ -55,9 +57,5 @@ int main(int argc,char *argv[]){
 
 	fclose(ifp);
 	fclose(opf);
-
-
-
-
 
 }
