@@ -3,7 +3,10 @@
 #include <errno.h>
 
 int main(int argc,char *argv[]){
-
+	if(argc<2){
+		fprintf(stderr,"usage ./passwd.o <output file name>");
+		return -1;
+	}
 	//Dimensione del file di input
 	int sz;
 

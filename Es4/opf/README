@@ -1,3 +1,5 @@
 Cartella dei file di output
 
 ciao.txt esercizio etc/passwd
+mat_dump.txt matrice formato testuale
+mat_dump.dat matrice formato binario
