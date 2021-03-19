@@ -2,7 +2,6 @@
 #include <string.h>
 #include <errno.h>
 #include <stdlib.h>
-#include <math.h>
 
 typedef int F_t(const void *s1,const void *s2, size_t n);
 
@@ -42,7 +41,7 @@ int main(int argc,char *argv[]){
 
 
 	printf("memcmp result : %d\n", confronta(&memcmp,M1,M2,n*n*sizeof(float)));
-	//Aggiungere funzione confronta matrici
+	
 	fclose(ifp);
 	fclose(ifpb);
 
