@@ -3,7 +3,12 @@ TARGETS		=  passwd	\
 		  binmat	\
 		  readbinmat	\
 		  wcsimple
+DIR		= /home/dan/Scrivania/SOL_ASSIGNMENTS/Es4/objs
 
+OBJS		= $(DIR)/passwd		\
+		  $(DIR)/binmat		\
+		  $(DIR)/readbinmat	\
+		  $(DIR)/wcsimple
 
 .PHONY:  all	\
 	 move	\
@@ -19,8 +24,8 @@ $.o: $.c
 all		: $(TARGETS)
 
 move		:
-	-mv $(TARGETS) /home/dan/Scrivania/SOL_ASSIGNMENTS/Es4/objs
+	-mv $(TARGETS) $(DIR)
 
 clean		:
-	-rm -f $(TARGETS)
+	-rm -f $(OBJS)
 
