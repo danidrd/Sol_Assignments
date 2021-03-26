@@ -43,10 +43,16 @@ int main(int argc,char *argv[]){
 	for(i=optind;i<argc;i++){
 		//Per ogni nome file
 		//Controllo che esista il file in memoria
-		if( access( argv[optind], R_OK ) != 0 ) {
+		if(access(argv[optind],R_OK) != 0) {
     		fprintf(stderr,"La stringa %s non indica un file readable", argv[optind]);
     		return -1;
-		} 
+		}
+
+		fseek(argv[optind],0L,SEEK_END);
+		sz = ftell(ifp);
+		char s[sz + 2];
+		//Necessario per rileggere il file dopo la fseek
+		rewind(arv[optind]);
 
 		//Restituisco i risultati voluti '-l o -w, oppure entrambi' per quel file
 		if(lw){
