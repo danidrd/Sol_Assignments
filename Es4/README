@@ -3,4 +3,4 @@ Assignment 4
 1: etc/passwd
 2. binmat.c , readbinmat.c
 3. wcsimple.c (inclusa dir readableFiles)
-4. makefile
+4. makefile (dir src)

@@ -1,4 +1,3 @@
-CC		=  gcc
 CFLAGS		=  -Wall -pedantic
 TARGETS		=  passwd	\
 		  binmat	\
@@ -6,7 +5,9 @@ TARGETS		=  passwd	\
 		  wcsimple
 
 
-.PHONY:  clean all
+.PHONY:  all	\
+	 move	\
+	 clean
 .SUFFIXES: .c .h
 
 %: %.c
@@ -17,5 +18,9 @@ $.o: $.c
 
 all		: $(TARGETS)
 
+move		:
+	-mv $(TARGETS) /home/dan/Scrivania/SOL_ASSIGNMENTS/Es4/objs
+
 clean		:
 	-rm -f $(TARGETS)
+
