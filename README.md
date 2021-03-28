@@ -1,5 +1,6 @@
 # Sol_Assignments
 Assignments 1
+
 cmdlineparsing.c
 
 Assignments 2:
@@ -17,3 +18,12 @@ tok(librerie statiche e dinamiche)
 macro.c
 sommada.c
 prog.c
+
+
+Assignement 4:
+
+directory Es4
+
+Assignment 5:
+
+directory Es5
