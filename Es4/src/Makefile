@@ -3,7 +3,7 @@ TARGETS		=  passwd	\
 		  binmat	\
 		  readbinmat	\
 		  wcsimple
-DIR		= /home/dan/Scrivania/SOL_ASSIGNMENTS/Es4/objs
+DIR		= /home/dan/Scrivania/SOL_ASSIGNMENTS/Es4/bin
 
 OBJS		= $(DIR)/passwd		\
 		  $(DIR)/binmat		\
