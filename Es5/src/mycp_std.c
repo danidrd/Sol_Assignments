@@ -9,7 +9,7 @@
 
 
 
-#define BUFFERSIZE 256
+#define BUFFERSIZE 512
 
 int main(int argc, char *argv[]) {
 
