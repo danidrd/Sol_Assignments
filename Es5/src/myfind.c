@@ -9,6 +9,8 @@
 #include <fcntl.h>
 #include <limits.h>
 
+#include <time.h>
+
 
 
 
@@ -43,7 +45,7 @@ int show_dir_content(const char *path, const char *filename, size_t len,int dept
 			if(last != NULL){
 
 				if(strcmp(last+1,filename) == 0){
-				printf("File found!\n Absolute path = %s\n",path);
+				printf("File found!\n Absolute path = %s Time = %s\n",path,ctime(&s.st_mtime));
 				fflush(stdout);			
 				return 1;
 				}
@@ -76,7 +78,7 @@ int show_dir_content(const char *path, const char *filename, size_t len,int dept
 		if((show_dir_content(realpaths,filename,len,1))==1){
 
 			
-			if(chdir("..") == .1){
+			if(chdir("..") == -1){
 				perror("chdir, impossibile salire alla dir padre");
 			}
 

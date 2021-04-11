@@ -63,7 +63,8 @@ int main(int argc, char *argv[]) {
 	while((len= read(fdi,buf,BUFFERSIZE)) > 0){
 			if( write(fdo,buf,len) == -1){
 				perror("%s: write"); strerror(errno); exit(EXIT_FAILURE); //?
-			}	
+			}
+
 	}
 
 
