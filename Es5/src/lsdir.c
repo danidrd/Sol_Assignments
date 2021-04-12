@@ -142,8 +142,8 @@ int main(int argc, char *argv[]) {
 	
 	if(show_dir_content(argv[1],0,argv[1]) == -1){
 
-
-
+		fprintf(stderr,"%s is not a directory\n",argv[1]);
+		return -1;
 	}
 	
 
