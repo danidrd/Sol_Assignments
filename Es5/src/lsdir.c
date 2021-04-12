@@ -24,12 +24,12 @@ file4     size    permessi
 */
 
 
-int show_dir_content(const char *path, const char *filename, size_t len,int depth){
+int show_dir_content(char *path,int depth,char *cwd){
 	char buf[1024];
 	struct stat s;
 	char *realpaths;
-	int isopen=0;
 
+	
 	if(depth == 0) realpaths = realpath(path,buf);
 	else realpaths = path;
 	realpaths[strlen(realpaths)] = '\0';
@@ -39,40 +39,54 @@ int show_dir_content(const char *path, const char *filename, size_t len,int dept
 
 	if( stat(realpaths,&s) == 0 ){
 		if( s.st_mode & S_IFDIR ){
-			//Directory
-			
+			//Directory		
 			
 			if(chdir(realpaths) == -1){
 				perror("chdir 2"); exit(EXIT_FAILURE);
 			}
-			isopen = 1;
+			cwd = realpaths;
 			d = opendir(realpaths);
 
 		}else if(s.st_mode & S_IFREG){
 			//Regular file
-
-			char *last = strrchr(path,'/');
-			if(last != NULL){
-
-				if(strcmp(last+1,filename) == 0){
-				printf("File found!\n Absolute path = %s Time = %s\n",path,ctime(&s.st_mtime));
-				fflush(stdout);			
-				return 1;
-				}
-
+			if(depth == 0){
+				fprintf(stderr,"Il primo path %s non indica una cartella\n",realpaths);
+				return -1;
 			}
 
-			printf("File not found!\n Absolute path = %s\n",path);
-			fflush(stdout);
-			return -1;
+				char mode[11] = {'-','-','-','-','-','-','-','-','-','-','\0'};
 
+				if(S_ISDIR(s.st_mode)) mode[0] = 'd';
+				if(S_ISCHR(s.st_mode)) mode[0] = 'c';
+				if(S_ISBLK(s.st_mode)) mode[0] = 'b';
+				if(S_ISLNK(s.st_mode)) mode[0] = 'l';
+				if(S_ISFIFO(s.st_mode)) mode[0] = 'p';
+				if(S_ISSOCK(s.st_mode)) mode[0] = 's';
+
+				if(S_IRUSR & s.st_mode) mode[1] = 'r';
+				if(S_IWUSR & s.st_mode) mode[2] = 'w';
+				if(S_IXUSR & s.st_mode) mode[3] = 'x';
+
+
+				if(S_IRGRP & s.st_mode) mode[4] = 'r';
+				if(S_IWGRP & s.st_mode) mode[5] = 'w';
+				if(S_IXGRP & s.st_mode) mode[6] = 'x';
+
+
+				if(S_IROTH & s.st_mode) mode[7] = 'r';
+				if(S_IWOTH & s.st_mode) mode[8] = 'w';
+				if(S_IXOTH & s.st_mode) mode[9] = 'x';
+							
+			printf("Directory : %-s \n %-s\t%-10ld\t%-s \n\n",cwd,realpaths,s.st_size,mode);
+			fflush(stdout);			
+			return 1;
 		}
 
 	}
 
 	
 	
-	if(!isopen) d = opendir(realpaths);
+	d = opendir(realpaths);
 	struct dirent *dir; //directory entries
 	
 	while((errno=0,dir=readdir(d)) != NULL){
@@ -85,12 +99,12 @@ int show_dir_content(const char *path, const char *filename, size_t len,int dept
 		if(dir->d_type == DT_DIR){
 		
 		
-		if((show_dir_content(realpaths,filename,len,1))==1){
+			if((show_dir_content(realpaths,1,realpaths))==1){
 
-			
-			if(chdir("..") == -1){
-				perror("chdir, impossibile salire alla dir padre");
-			}
+				
+				if(chdir("..") == -1){
+					perror("chdir, impossibile salire alla dir padre");
+				}
 
 
 		}
@@ -99,7 +113,7 @@ int show_dir_content(const char *path, const char *filename, size_t len,int dept
 
 		}else if(dir->d_type == DT_REG){
 		 
-		 show_dir_content(realpaths,filename,len,1);
+		 show_dir_content(realpaths,1,cwd);
 		 
 		}
 		
@@ -116,4 +130,24 @@ int show_dir_content(const char *path, const char *filename, size_t len,int dept
 	
 	return 1;
 	
+}
+
+//Recursive searching of a filename into a directory(and sub-dir)
+int main(int argc, char *argv[]) {
+
+	if(argc!=2){
+		fprintf(stderr, "usage: %s startdir\n", argv[0]);
+	    exit(EXIT_FAILURE);
+	}
+	
+	if(show_dir_content(argv[1],0,argv[1]) == -1){
+
+
+
+	}
+	
+
+	return 0;
+	
+
 }
