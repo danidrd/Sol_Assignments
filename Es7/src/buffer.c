@@ -4,6 +4,16 @@
 #include <errno.h>
 #include <unistd.h>
 
+
+void put(char * buf){
+	buf="c";
+}
+
+char* get(char* buf){
+	return buf;
+}
+
+
 static char* buffer;
 static pthread_mutex_t mtx = PTHREAD_MUTEX_INITIALIZER;
 static pthread_cond_t empty = PTHREAD_COND_INITIALIZER;
@@ -23,14 +33,13 @@ static void* producer(void * arg){
 			pthread_cond_wait(&empty,&mtx);
 
 		}
-		buffer = "c";
+		put(buffer);
 		is_full=1;		
 		pthread_cond_signal(&full);
 		pthread_mutex_unlock(&mtx);
 		printf("unlock");
 
 	}
-	return;
 }
 
 static void* consumer(void * arg){
@@ -46,14 +55,14 @@ static void* consumer(void * arg){
 			pthread_cond_wait(&full,&mtx);
 		}
 		
-		
-		buffer = NULL;
+		printf("%s\n", get(buffer));
+		buffer = '\0';
 		is_empty = 1;
 		pthread_cond_signal(&empty);
 		pthread_mutex_unlock(&mtx);
 		printf("unlock");
 	}
-	return;
+
 }
 
 int main(void){
@@ -61,18 +70,21 @@ int main(void){
 	pthread_t tid1,tid2;
 	int err1,err2;
 
-	printf("ciaoc");
+
 	if( (err1 = pthread_create(&tid1,NULL,&producer,NULL)) != 0){
 		errno = err1;
 		perror("pthread_create");
 		exit(-1);
 	}
-	printf("ciaob");
+
 	if( (err2 = pthread_create(&tid2,NULL,&consumer,NULL)) != 0){
 		errno = err2;
 		perror("pthread_create");
 		exit(-1);
 	}	
+	int status;
+	pthread_join(tid1, (void *)&status);
+	pthread_join(tid2,(void *)&status);
 
 
 }
