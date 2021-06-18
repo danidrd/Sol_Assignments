@@ -3,75 +3,84 @@
 #include <stdlib.h>
 #include <errno.h>
 #include <unistd.h>
+#include <stdbool.h>
 
 
-void put(char * buf){
-	buf="c";
+
+
+
+static int buffer;
+
+char get(){
+	return buffer;
 }
 
-char* get(char* buf){
-	return buf;
+void put(int* buf){
+	printf("The producer produce : %d", *buf=rand_r(0));
 }
 
 
-static char* buffer;
+
 static pthread_mutex_t mtx = PTHREAD_MUTEX_INITIALIZER;
 static pthread_cond_t empty = PTHREAD_COND_INITIALIZER;
 static pthread_cond_t full = PTHREAD_COND_INITIALIZER;
 
-static int is_full;
-static int is_empty;
+static bool is_full=false;
+static bool is_empty=true;
 
-static void* producer(void * arg){
-	
-	while(1){
-		printf("ciao");
+static void *producer(){
+	printf("ciao prod");
+	fflush(stdout);
+	while(true){
+		
 		sleep(1);
 		pthread_mutex_lock(&mtx);
-		printf("lock");
+		printf("lock\n");
 		while(!is_empty){
 			pthread_cond_wait(&empty,&mtx);
 
 		}
-		put(buffer);
-		is_full=1;		
+		put(&buffer);
+		is_full=true;
+		is_empty=false;		
 		pthread_cond_signal(&full);
 		pthread_mutex_unlock(&mtx);
-		printf("unlock");
+		printf("unlock\n");
 
 	}
+
+	return;
 }
 
 static void* consumer(void * arg){
-	printf("ciao consumer");
-	
-	while(1){
+	printf("ciao cons");
+	while(true){
 
 		sleep(1);
 		
 		pthread_mutex_lock(&mtx);
-		printf("lock");
+		printf("lock\n");
 		while(!is_full){
 			pthread_cond_wait(&full,&mtx);
 		}
 		
-		printf("%s\n", get(buffer));
-		buffer = '\0';
-		is_empty = 1;
+		printf("The consumer consume :%d\n", get());
+		buffer = NULL;
+		is_empty = true;
+		is_full = false;
 		pthread_cond_signal(&empty);
 		pthread_mutex_unlock(&mtx);
-		printf("unlock");
+		printf("unlock\n");
 	}
-
+	return;
 }
 
 int main(void){
 
 	pthread_t tid1,tid2;
 	int err1,err2;
-
-
-	if( (err1 = pthread_create(&tid1,NULL,&producer,NULL)) != 0){
+	
+	if( (err1 = pthread_create(&tid1,NULL,producer,NULL)) != 0){
 		errno = err1;
 		perror("pthread_create");
 		exit(-1);
@@ -80,11 +89,14 @@ int main(void){
 	if( (err2 = pthread_create(&tid2,NULL,&consumer,NULL)) != 0){
 		errno = err2;
 		perror("pthread_create");
+		
 		exit(-1);
-	}	
-	int status;
-	pthread_join(tid1, (void *)&status);
-	pthread_join(tid2,(void *)&status);
 
+
+	}	
+
+	
+
+	return 0;
 
 }
