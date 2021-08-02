@@ -11,7 +11,7 @@
 
 static int buffer;
 
-char get(){
+int get(){
 	return buffer;
 }
 
@@ -49,7 +49,7 @@ static void *producer(){
 
 	}
 
-	return;
+	return NULL;
 }
 
 static void* consumer(void * arg){
@@ -65,14 +65,14 @@ static void* consumer(void * arg){
 		}
 		
 		printf("The consumer consume :%d\n", get());
-		buffer = NULL;
+		//buffer = NULL;
 		is_empty = true;
 		is_full = false;
 		pthread_cond_signal(&empty);
 		pthread_mutex_unlock(&mtx);
 		printf("unlock\n");
 	}
-	return;
+	return NULL;
 }
 
 int main(void){
