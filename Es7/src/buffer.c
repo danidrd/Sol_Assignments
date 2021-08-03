@@ -16,34 +16,36 @@ int get(){
 }
 
 void put(int* buf){
-	printf("The producer produce : %d", *buf=rand_r(0));
+	printf("The producer produce : %d", *buf=rand());
 }
 
 
 
 static pthread_mutex_t mtx = PTHREAD_MUTEX_INITIALIZER;
-static pthread_cond_t empty = PTHREAD_COND_INITIALIZER;
-static pthread_cond_t full = PTHREAD_COND_INITIALIZER;
+static pthread_cond_t cond = PTHREAD_COND_INITIALIZER;
 
-static bool is_full=false;
-static bool is_empty=true;
+
+static char bufempty=1;
+
 
 static void *producer(){
 	printf("ciao prod");
 	fflush(stdout);
 	while(true){
+			printf("ciao prod1");
+
 		
-		sleep(1);
 		pthread_mutex_lock(&mtx);
 		printf("lock\n");
-		while(!is_empty){
-			pthread_cond_wait(&empty,&mtx);
+		while(!bufempty){
+			pthread_cond_wait(&cond,&mtx);
 
 		}
 		put(&buffer);
-		is_full=true;
-		is_empty=false;		
-		pthread_cond_signal(&full);
+		printf("%d",buffer);
+		bufempty=0;
+			
+		pthread_cond_signal(&cond);
 		pthread_mutex_unlock(&mtx);
 		printf("unlock\n");
 
@@ -55,20 +57,21 @@ static void *producer(){
 static void* consumer(void * arg){
 	printf("ciao cons");
 	while(true){
+	printf("ciao cons 1");
 
-		sleep(1);
+		
 		
 		pthread_mutex_lock(&mtx);
 		printf("lock\n");
-		while(!is_full){
-			pthread_cond_wait(&full,&mtx);
+		while(bufempty){
+			pthread_cond_wait(&cond,&mtx);
 		}
 		
 		printf("The consumer consume :%d\n", get());
-		//buffer = NULL;
-		is_empty = true;
-		is_full = false;
-		pthread_cond_signal(&empty);
+		bufempty=1;
+		
+		
+		pthread_cond_signal(&cond);
 		pthread_mutex_unlock(&mtx);
 		printf("unlock\n");
 	}
