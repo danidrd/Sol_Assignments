@@ -29,10 +29,8 @@ static char bufempty=1;
 
 
 static void *producer(){
-	printf("ciao prod");
 	fflush(stdout);
 	while(true){
-			printf("ciao prod1");
 
 		
 		pthread_mutex_lock(&mtx);
@@ -42,7 +40,7 @@ static void *producer(){
 
 		}
 		put(&buffer);
-		printf("%d",buffer);
+		
 		bufempty=0;
 			
 		pthread_cond_signal(&cond);
@@ -55,9 +53,9 @@ static void *producer(){
 }
 
 static void* consumer(void * arg){
-	printf("ciao cons");
+	
 	while(true){
-	printf("ciao cons 1");
+	
 
 		
 		
