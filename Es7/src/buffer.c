@@ -16,7 +16,7 @@ int get(){
 }
 
 void put(int* buf){
-	printf("The producer produce : %d", *buf=rand());
+	printf("The producer produce : %d\n", *buf=rand());
 }
 
 
@@ -34,7 +34,7 @@ static void *producer(){
 
 		
 		pthread_mutex_lock(&mtx);
-		printf("lock\n");
+		printf("lock %d \n",gettid());
 		while(!bufempty){
 			pthread_cond_wait(&cond,&mtx);
 
@@ -45,7 +45,7 @@ static void *producer(){
 			
 		pthread_cond_signal(&cond);
 		pthread_mutex_unlock(&mtx);
-		printf("unlock\n");
+		printf("unlock, %d \n",gettid());
 
 	}
 
@@ -60,7 +60,7 @@ static void* consumer(void * arg){
 		
 		
 		pthread_mutex_lock(&mtx);
-		printf("lock\n");
+		printf("lock %d \n",gettid());
 		while(bufempty){
 			pthread_cond_wait(&cond,&mtx);
 		}
@@ -71,7 +71,7 @@ static void* consumer(void * arg){
 		
 		pthread_cond_signal(&cond);
 		pthread_mutex_unlock(&mtx);
-		printf("unlock\n");
+		printf("unlock, %d \n",gettid());
 	}
 	return NULL;
 }
