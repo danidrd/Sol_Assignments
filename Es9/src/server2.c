@@ -21,18 +21,6 @@ void cleanup(){
 	unlink(SOCKNAME);
 }
 
-typedef struct DispatcherArgs
-{
-	int fd_sk;
-
-}DispatcherArgs_t;
-
-typedef struct workerArgs
-{
-	int f_c;
-}workerArgs_t;
-
-
 
 void toUpper(char *buf){
 	for (int i = 0; i < strlen(buf); ++i)
@@ -99,6 +87,9 @@ int main(int argc, char *argv[]){
 	cleanup();
 	atexit(cleanup);
 	
+	
+
+
 	int fd_skt,err; 
 	pthread_t * tid;DispatcherArgs_t *dat;
 	struct sockaddr_un sa;

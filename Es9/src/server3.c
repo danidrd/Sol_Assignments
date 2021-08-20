@@ -78,6 +78,7 @@ int main(int argc, char *argv[]){
  							FD_CLR(fd,&set);
  							fd_num = update(set,fd_num);
  							close(fd);
+ 							continue;
  						}
  						toUpper(buf);
  						if(write(fd,buf,N) == -1){
