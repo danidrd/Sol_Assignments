@@ -77,6 +77,7 @@ int main(int argc, char *argv[]){
  						if(err == 0){ //EOF client finito
  							FD_CLR(fd,&set);
  							fd_num = update(set,fd_num);
+
  							close(fd);
  							continue;
  						}
@@ -84,6 +85,7 @@ int main(int argc, char *argv[]){
  						if(write(fd,buf,N) == -1){
  						perror("write");
  						FD_CLR(fd,&set);
+ 						fd_num = update(set,fd_num);
  						close(fd);
  						}
  					}

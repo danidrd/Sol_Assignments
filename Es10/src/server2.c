@@ -39,20 +39,26 @@ void toUpper(char *buf){
 }
 
 static void *worker(void *arg){
-	long fd_c = (long)arg;int err;
+	long *fd_c = (long*)arg;int err;
 	char buf[N];
 
-	while(true){
-		toUpper(buf);
-		SYSCALL(err,read(fd_c,buf,N),"read");
-		if(err == 0) break;
-		SYSCALL(err,write(fd_c,buf,N),"write");
+	while(!sig_flag){
+		
+		
+			
+			SYSCALL(err,read(*fd_c,buf,N),"read");
+			if(err == 0 || sig_flag) break;
+			toUpper(buf);
+			SYSCALL(err,write(*fd_c,buf,N),"write");
+		
+		
 	}
 
 
-	close(fd_c);
+	close(*fd_c);
 	return NULL;
 }
+
 int dispatcher(long connfd){
 	pthread_attr_t thattr;
 	pthread_t thid;
@@ -94,6 +100,12 @@ int dispatcher(long connfd){
 		return -1;
 	}
 
+	if(pthread_sigmask(SIG_SETMASK,&oldmask,NULL) != 0 ){
+		fprintf(stderr, "FATAL ERROR\n");
+		close(connfd);
+		return -1;
+	}
+
 	return 0;
 
 }
@@ -119,7 +131,7 @@ int main(int argc, char *argv[]){
 	sigaddset(&mask, SIGQUIT);
 	sigaddset(&mask, SIGTERM);
 	sigaddset(&mask, SIGHUP);
-
+	//Blocco la ricezione di segnali prima dell-installazione del signal handler
 	if(pthread_sigmask(SIG_BLOCK,&mask,&oldmask) != 0){
 		fprintf(stderr, "FATAL ERROR, pthread_sigmask\n");
 		return EXIT_FAILURE;
@@ -134,14 +146,15 @@ int main(int argc, char *argv[]){
 	ec_meno1(sigaction(SIGTERM,&s,NULL),"sigaction");
 	ec_meno1(sigaction(SIGQUIT,&s,NULL),"sigaction");
 	ec_meno1(sigaction(SIGHUP,&s,NULL),"sigaction");
-	//s.sa_handler=SIG_IGN;
-	//ec_meno1(sigaction(SIGPIPE,&s,NULL),"sigaction");
+	s.sa_handler=SIG_IGN;
+	ec_meno1(sigaction(SIGPIPE,&s,NULL),"sigaction");
 	
 
 
 	int fd_skt,err,r=0; 
 	
 	struct sockaddr_un sa;
+	memset(&sa,'0',sizeof(sa));
 	strncpy(sa.sun_path, SOCKNAME, UNIX_PATH_MAX);
 	sa.sun_family=AF_UNIX;
 	SYSCALL(fd_skt,socket(AF_UNIX,SOCK_STREAM,0),"creando listening socket");
@@ -171,6 +184,8 @@ int main(int argc, char *argv[]){
  		}
  	}
  	
+ 	cleanup();
+
  	close(fd_skt);
  	return r;
 
